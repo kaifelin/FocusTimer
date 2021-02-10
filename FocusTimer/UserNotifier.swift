@@ -1,12 +1,15 @@
-import Foundation
-import  UserNotifications
+import UserNotifications
 
-class FeedbackNotifier {
+class UserNotifier {
     enum Event {
+        enum Mode {
+            case busy
+            case free
+        }
         case start
         case swipe
         case drop
-        case stop(PomodoroTimer.Mode)
+        case stop(Mode)
     }
 
     private var isEnabled = false
@@ -22,7 +25,7 @@ class FeedbackNotifier {
     }
 }
 
-extension FeedbackNotifier {
+extension UserNotifier{
     func handle(event: Event) {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             self.isEnabled = (settings.authorizationStatus == .authorized)
@@ -49,8 +52,6 @@ extension FeedbackNotifier {
                 case .free:
                     content.title = "Rest is over"
                     content.subtitle = "Get to work"
-                case .idle:
-                    return
                 }
 
                 UNUserNotificationCenter.current().add(
@@ -73,3 +74,4 @@ extension FeedbackNotifier {
         sound.play()
     }
 }
+

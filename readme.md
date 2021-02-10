@@ -4,7 +4,7 @@
 
 # Focus Timer
 
-Simple [pomodoro](https://en.wikipedia.org/wiki/Pomodoro_Technique) timer for the mac touch bar    
+Simple [pomodoro](https://en.wikipedia.org/wiki/Pomodoro_Technique) timer for mac touch bar    
 
 ## How to use
 

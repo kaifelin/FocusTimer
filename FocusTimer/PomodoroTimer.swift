@@ -1,9 +1,17 @@
 import Foundation
 
-protocol PomodoroTimerDelegate {
-    func timer(_ timer: PomodoroTimer, start mode: PomodoroTimer.Mode)
-    func timer(_ timer: PomodoroTimer, tick seconds: TimeInterval)
-    func timer(_ timer: PomodoroTimer, end mode: PomodoroTimer.Mode)
+typealias Completion = (() -> Void)
+
+protocol PomodoroTimerInput: AnyObject {
+    func toggle(completion: Completion?)
+    func drop(completion: Completion?)
+    func add(seconds: TimeInterval, completion: Completion?)
+}
+
+protocol PomodoroTimerOutput: AnyObject {
+    func pomodoroTimerDidStart(_ timer: PomodoroTimer, mode: PomodoroTimer.Mode)
+    func pomodoroTimerDidTick(_ timer: PomodoroTimer, seconds: TimeInterval)
+    func pomodoroTimerDidEnd(_ timer: PomodoroTimer, mode: PomodoroTimer.Mode)
 }
 
 class PomodoroTimer {
@@ -13,27 +21,24 @@ class PomodoroTimer {
         case idle = 0
     }
 
-    var delegate: PomodoroTimerDelegate?
+    weak var delegate: PomodoroTimerOutput?
 
     private var mode: Mode = .idle {
         didSet {
             guard oldValue != mode else { return }
             isRunning = (mode != .idle)
             left = mode.rawValue
-            delegate?.timer(self, start: mode)
         }
     }
 
-    private lazy var timer: DispatchSourceTimer = {
+    private lazy var ticker: DispatchSourceTimer = {
         let timer = DispatchSource.makeTimerSource(flags: .strict, queue: .main)
-
         timer.schedule(deadline: .now(), repeating: .seconds(1), leeway: .milliseconds(100))
         timer.setEventHandler { [weak self] in self?.update() }
-
         return timer
     }()
 
-    private var until = Date.distantPast {
+    private var until: Date = .distantPast {
         didSet { update() }
     }
 
@@ -45,11 +50,11 @@ class PomodoroTimer {
     private var isRunning = false {
         didSet {
             guard oldValue != isRunning else { return }
-            isRunning ? timer.resume() : timer.suspend()
+            isRunning ? ticker.resume() : ticker.suspend()
         }
     }
 
-    private var isRerunning = false
+    private var isAsleep = false
 
     init() {
         NSWorkspace.shared.notificationCenter.addObserver(
@@ -68,22 +73,22 @@ class PomodoroTimer {
 
     deinit {
         NSWorkspace.shared.notificationCenter.removeObserver(self)
-        timer.setEventHandler { }
-        timer.cancel()
+        ticker.setEventHandler { }
+        ticker.cancel()
     }
 }
 
 extension PomodoroTimer {
     @objc
     private func willSleep() {
-        isRerunning = isRunning
+        isAsleep = isRunning
         isRunning = false
     }
 
     @objc
     private func didWake() {
-        isRunning = isRerunning
-        isRerunning = false
+        isRunning = isAsleep
+        isAsleep = false
     }
 
     private func update() {
@@ -91,27 +96,29 @@ extension PomodoroTimer {
 
         if left == 0 {
             isRunning = false
-            delegate?.timer(self, end: mode)
+            delegate?.pomodoroTimerDidEnd(self, mode: mode)
         } else {
             isRunning = true
-            delegate?.timer(self, tick: left)
+            delegate?.pomodoroTimerDidTick(self, seconds: left)
         }
     }
 }
 
-extension PomodoroTimer {
-    func toggle(completion: (() -> Void)? = nil) {
+extension PomodoroTimer: PomodoroTimerInput {
+    func toggle(completion: Completion? = nil) {
         guard !isRunning else { return }
         mode = (mode != .busy) ? .busy : .free
+        delegate?.pomodoroTimerDidStart(self, mode: mode)
         completion?()
     }
 
-    func drop(completion: (() -> Void)? = nil) {
+    func drop(completion: Completion? = nil) {
         mode = .idle
+        delegate?.pomodoroTimerDidStart(self, mode: mode)
         completion?()
     }
 
-    func add(seconds: TimeInterval, completion: (() -> Void)? = nil) {
+    func add(seconds: TimeInterval, completion: Completion? = nil) {
         guard mode != .idle else { return }
         left += seconds
         completion?()

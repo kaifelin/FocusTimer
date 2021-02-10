@@ -22,4 +22,4 @@ extern void DFRSystemModalShowsCloseBoxWhenFrontMost(BOOL);
 
 @end
 
-#endif
+#endif /* TouchBar_h */

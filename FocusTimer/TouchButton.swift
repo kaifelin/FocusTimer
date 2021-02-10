@@ -8,6 +8,14 @@ protocol TouchButtonDelegate: AnyObject {
     func swipeRightTouchButton(_ button: TouchButton)
 }
 
+extension TouchButtonDelegate {
+    func tapTouchButton(_ button: TouchButton) { }
+    func doubleTapTouchButton(_ button: TouchButton) { }
+    func holdTouchButton(_ button: TouchButton) { }
+    func swipeLeftTouchButton(_ button: TouchButton) { }
+    func swipeRightTouchButton(_ button: TouchButton) { }
+}
+
 class TouchButton: NSButton {
     weak var delegate: TouchButtonDelegate?
 

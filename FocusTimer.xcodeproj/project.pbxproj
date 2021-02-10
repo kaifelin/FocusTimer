@@ -8,33 +8,34 @@
 
 /* Begin PBXBuildFile section */
 		5D5C657622B80F5B0023FA76 /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D5C657522B80F5B0023FA76 /* Icons.xcassets */; };
-		5DCF270722B7EAC300C43150 /* PomodoroController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCF270622B7EAC300C43150 /* PomodoroController.swift */; };
 		8A0AD2BB240BBD3300C0C937 /* TouchButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0AD2BA240BBD3300C0C937 /* TouchButton.swift */; };
 		8A112DDA2099E8AE00DDBDD0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A112DD92099E8AE00DDBDD0 /* AppDelegate.swift */; };
 		8A112E0A2099FB8000DDBDD0 /* DFRFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A112E092099FB8000DDBDD0 /* DFRFoundation.framework */; };
 		8A18297E23FE58E8001DD016 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A18297D23FE58E8001DD016 /* main.swift */; };
-		8A32533D25C2E1420058A7F1 /* FeedbackNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A32533C25C2E1420058A7F1 /* FeedbackNotifier.swift */; };
 		8A408B5C25C08622008E6DAC /* Tink.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 8A408B5925C08622008E6DAC /* Tink.aiff */; };
 		8A408B5D25C08622008E6DAC /* Morse.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 8A408B5A25C08622008E6DAC /* Morse.aiff */; };
 		8A408B5E25C08622008E6DAC /* Pop.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 8A408B5B25C08622008E6DAC /* Pop.aiff */; };
+		8A5094E325D4370800804447 /* PomodoroController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5094E225D4370800804447 /* PomodoroController.swift */; };
+		8ABB327025D465C700B3091A /* UserNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ABB326F25D465C700B3091A /* UserNotifier.swift */; };
 		8AFB4C1B25C2A8C6002521AC /* PomodoroTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AFB4C1A25C2A8C6002521AC /* PomodoroTimer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		5D5C657522B80F5B0023FA76 /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
-		5DCF270622B7EAC300C43150 /* PomodoroController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroController.swift; sourceTree = "<group>"; };
 		8A0AD2BA240BBD3300C0C937 /* TouchButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchButton.swift; sourceTree = "<group>"; };
 		8A112DD62099E8AE00DDBDD0 /* Focus Timer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Focus Timer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A112DD92099E8AE00DDBDD0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8A112DE22099E8B100DDBDD0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8A112DE32099E8B100DDBDD0 /* Entitlements.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Entitlements.entitlements; sourceTree = "<group>"; };
-		8A112E052099F8A000DDBDD0 /* TouchBarPrivateAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TouchBarPrivateAPI.h; sourceTree = "<group>"; };
+		8A112E052099F8A000DDBDD0 /* TouchBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TouchBar.h; sourceTree = "<group>"; };
 		8A112E092099FB8000DDBDD0 /* DFRFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DFRFoundation.framework; path = ../../../../System/Library/PrivateFrameworks/DFRFoundation.framework; sourceTree = "<group>"; };
 		8A18297D23FE58E8001DD016 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		8A32533C25C2E1420058A7F1 /* FeedbackNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackNotifier.swift; sourceTree = "<group>"; };
+		8A352D7425D4500D000890AC /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		8A352D7C25D45065000890AC /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		8A408B5925C08622008E6DAC /* Tink.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Tink.aiff; sourceTree = "<group>"; };
 		8A408B5A25C08622008E6DAC /* Morse.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Morse.aiff; sourceTree = "<group>"; };
 		8A408B5B25C08622008E6DAC /* Pop.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Pop.aiff; sourceTree = "<group>"; };
+		8A5094E225D4370800804447 /* PomodoroController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroController.swift; sourceTree = "<group>"; };
+		8ABB326F25D465C700B3091A /* UserNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotifier.swift; sourceTree = "<group>"; };
 		8AFB4C1A25C2A8C6002521AC /* PomodoroTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -53,7 +54,6 @@
 		5DCF270222B7E93600C43150 /* System */ = {
 			isa = PBXGroup;
 			children = (
-				8A112DE32099E8B100DDBDD0 /* Entitlements.entitlements */,
 				5D5C657522B80F5B0023FA76 /* Icons.xcassets */,
 				8A112DE22099E8B100DDBDD0 /* Info.plist */,
 			);
@@ -82,13 +82,13 @@
 			children = (
 				8A408B5825C08613008E6DAC /* Sounds */,
 				5DCF270222B7E93600C43150 /* System */,
-				8A112DD92099E8AE00DDBDD0 /* AppDelegate.swift */,
-				8A32533C25C2E1420058A7F1 /* FeedbackNotifier.swift */,
 				8A18297D23FE58E8001DD016 /* main.swift */,
-				5DCF270622B7EAC300C43150 /* PomodoroController.swift */,
+				8A112DD92099E8AE00DDBDD0 /* AppDelegate.swift */,
+				8A5094E225D4370800804447 /* PomodoroController.swift */,
 				8AFB4C1A25C2A8C6002521AC /* PomodoroTimer.swift */,
-				8A112E052099F8A000DDBDD0 /* TouchBarPrivateAPI.h */,
+				8A112E052099F8A000DDBDD0 /* TouchBar.h */,
 				8A0AD2BA240BBD3300C0C937 /* TouchButton.swift */,
+				8ABB326F25D465C700B3091A /* UserNotifier.swift */,
 			);
 			path = FocusTimer;
 			sourceTree = "<group>";
@@ -96,6 +96,8 @@
 		8A112E082099FB7F00DDBDD0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8A352D7C25D45065000890AC /* MediaPlayer.framework */,
+				8A352D7425D4500D000890AC /* CoreFoundation.framework */,
 				8A112E092099FB8000DDBDD0 /* DFRFoundation.framework */,
 			);
 			name = Frameworks;
@@ -188,8 +190,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8A32533D25C2E1420058A7F1 /* FeedbackNotifier.swift in Sources */,
-				5DCF270722B7EAC300C43150 /* PomodoroController.swift in Sources */,
+				8A5094E325D4370800804447 /* PomodoroController.swift in Sources */,
+				8ABB327025D465C700B3091A /* UserNotifier.swift in Sources */,
 				8A112DDA2099E8AE00DDBDD0 /* AppDelegate.swift in Sources */,
 				8A18297E23FE58E8001DD016 /* main.swift in Sources */,
 				8A0AD2BB240BBD3300C0C937 /* TouchButton.swift in Sources */,
@@ -321,7 +323,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = FocusTimer/System/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -329,10 +331,10 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14.4;
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.aloshev.focustimer;
 				PRODUCT_NAME = "Focus Timer";
-				SWIFT_OBJC_BRIDGING_HEADER = FocusTimer/TouchBarPrivateAPI.h;
+				SWIFT_OBJC_BRIDGING_HEADER = FocusTimer/TouchBar.h;
 				SWIFT_VERSION = 4.0;
 				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -349,7 +351,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = FocusTimer/System/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -357,10 +359,10 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14.4;
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.aloshev.focustimer;
 				PRODUCT_NAME = "Focus Timer";
-				SWIFT_OBJC_BRIDGING_HEADER = FocusTimer/TouchBarPrivateAPI.h;
+				SWIFT_OBJC_BRIDGING_HEADER = FocusTimer/TouchBar.h;
 				SWIFT_VERSION = 4.0;
 				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

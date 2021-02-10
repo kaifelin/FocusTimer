@@ -1,42 +1,36 @@
 import Cocoa
-import UserNotifications
+
+private extension NSTouchBarItem.Identifier {
+    static let button = NSTouchBarItem.Identifier("com.aloshev.focustimer.button")
+}
 
 class PomodoroController: NSViewController {
-    private lazy var pomodoroButton: TouchButton = {
+    private lazy var button: TouchButton = {
         let button = TouchButton(
-            image: NSImage(named: NSImage.Name("TouchBarIcon"))!,
+            image: NSImage(named: NSImage.Name("BarIcon"))!,
             target: nil,
             action: nil
         )
-        button.title = ""
         button.font = NSFont.monospacedDigitSystemFont(ofSize: 15, weight: .medium)
         button.delegate = self
         return button
     }()
 
-    private lazy var pomodoroTimer: PomodoroTimer = {
+    // Some user activities (e.g. video watching) can displace the button out of the control strip
+    private let occupier: DispatchSourceTimer = {
+        let timer = DispatchSource.makeTimerSource(flags: .strict, queue: .main)
+        timer.schedule(deadline: .now(), repeating: .seconds(1), leeway: .milliseconds(100))
+        timer.setEventHandler { DFRElementSetControlStripPresenceForIdentifier(.button, true) }
+        return timer
+    }()
+
+    private lazy var timer: PomodoroTimer = {
         let timer = PomodoroTimer()
         timer.delegate = self
         return timer
     }()
 
-    // Some user activities (e.g. video watching) can displace the button out of the control strip
-    private lazy var controlStripTimer: DispatchSourceTimer = {
-        let timer = DispatchSource.makeTimerSource(flags: .strict, queue: DispatchQueue.main)
-
-        timer.schedule(deadline: .now(), repeating: .seconds(1), leeway: .milliseconds(100))
-        timer.setEventHandler { [weak self] in
-            guard
-                let touchBarItem = self?.touchBar?.item(forIdentifier: .pomodoroButton)
-            else {
-                exit(0)
-            }
-            NSTouchBarItem.addSystemTrayItem(touchBarItem)
-            DFRElementSetControlStripPresenceForIdentifier(touchBarItem.identifier, true)
-        }
-
-        return timer
-    }()
+    private let notifier = UserNotifier()
 
     private let formatter: DateComponentsFormatter = {
         let formatter = DateComponentsFormatter()
@@ -45,10 +39,13 @@ class PomodoroController: NSViewController {
         return formatter
     }()
 
-    private let notifier = FeedbackNotifier()
-
     override func loadView() {
-        self.view = NSView()
+        view = NSView()
+
+        let item = NSCustomTouchBarItem(identifier: .button)
+        item.view = button
+
+        NSTouchBarItem.addSystemTrayItem(item)
     }
 
     override func viewDidLoad() {
@@ -67,84 +64,66 @@ class PomodoroController: NSViewController {
             object: nil
         )
 
-        controlStripTimer.resume()
-    }
-
-    override func makeTouchBar() -> NSTouchBar? {
-        let touchBar = NSTouchBar()
-        touchBar.defaultItemIdentifiers = [.pomodoroButton]
-        touchBar.delegate = self
-        return touchBar
+        occupier.resume()
     }
 
     deinit {
         NSWorkspace.shared.notificationCenter.removeObserver(self)
-        controlStripTimer.setEventHandler { }
-        controlStripTimer.cancel()
+        occupier.setEventHandler { }
+        occupier.cancel()
     }
 }
 
 extension PomodoroController {
     @objc
     private func willSleep() {
-        controlStripTimer.suspend()
+        occupier.suspend()
     }
 
     @objc
     private func didWake() {
-        controlStripTimer.resume()
+        occupier.resume()
     }
 }
 
-extension PomodoroController: NSTouchBarDelegate {
-    func touchBar(
-        _ touchBar: NSTouchBar,
-        makeItemForIdentifier identifier: NSTouchBarItem.Identifier
-    ) -> NSTouchBarItem? {
-        let item = NSCustomTouchBarItem(identifier: identifier)
-        switch identifier {
-        case .pomodoroButton:
-            item.view = pomodoroButton
-        default:
-            break
-        }
-        return item
-    }
-}
-
-extension PomodoroController: PomodoroTimerDelegate {
-    func timer(_ timer: PomodoroTimer, start mode: PomodoroTimer.Mode) {
+extension PomodoroController: PomodoroTimerOutput {
+    func pomodoroTimerDidStart(_ timer: PomodoroTimer, mode: PomodoroTimer.Mode) {
         switch mode {
         case .free:
-            pomodoroButton.imagePosition = .noImage
-            pomodoroButton.bezelColor = .systemGreen
+            button.imagePosition = .noImage
+            button.bezelColor = .systemGreen
         case .busy:
-            pomodoroButton.imagePosition = .noImage
-            pomodoroButton.bezelColor = .systemRed
+            button.imagePosition = .noImage
+            button.bezelColor = .systemRed
         case .idle:
-            pomodoroButton.imagePosition = .imageOnly
-            pomodoroButton.bezelColor = .clear
-            pomodoroButton.title = ""
+            button.imagePosition = .imageOnly
+            button.bezelColor = .clear
+            button.title = ""
         }
     }
 
-    func timer(_ timer: PomodoroTimer, tick seconds: TimeInterval) {
-        pomodoroButton.title = (formatter.string(from: seconds) ?? "")
+    func pomodoroTimerDidTick(_ timer: PomodoroTimer, seconds: TimeInterval) {
+        button.title = (formatter.string(from: seconds) ?? "")
     }
 
-    func timer(_ timer: PomodoroTimer, end mode: PomodoroTimer.Mode) {
-        pomodoroButton.title = "00:00"
-        notifier.handle(event: .stop(mode))
+    func pomodoroTimerDidEnd(_ timer: PomodoroTimer, mode: PomodoroTimer.Mode) {
+        button.title = "00:00"
+
+        switch mode {
+        case .busy: notifier.handle(event: .stop(.busy))
+        case .free: notifier.handle(event: .stop(.free))
+        case .idle: break
+        }
     }
 }
 
 extension PomodoroController: TouchButtonDelegate {
     func tapTouchButton(_ button: TouchButton) {
-        pomodoroTimer.toggle() { [weak self] in self?.notifier.handle(event: .start) }
+        timer.toggle() { [weak notifier] in notifier?.handle(event: .start) }
     }
 
     func doubleTapTouchButton(_ button: TouchButton) {
-        pomodoroTimer.drop() { [weak self] in self?.notifier.handle(event: .drop) }
+        timer.drop() { [weak notifier] in notifier?.handle(event: .drop) }
     }
 
     func holdTouchButton(_ button: TouchButton) {
@@ -152,16 +131,10 @@ extension PomodoroController: TouchButtonDelegate {
     }
 
     func swipeLeftTouchButton(_ button: TouchButton) {
-        pomodoroTimer.add(seconds: -300) { [weak self] in self?.notifier.handle(event: .swipe) }
+        timer.add(seconds: -300) { [weak notifier] in notifier?.handle(event: .swipe) }
     }
 
     func swipeRightTouchButton(_ button: TouchButton) {
-        pomodoroTimer.add(seconds: 300) { [weak self] in self?.notifier.handle(event: .swipe) }
+        timer.add(seconds: 300) { [weak notifier] in notifier?.handle(event: .swipe) }
     }
-}
-
-extension NSTouchBarItem.Identifier {
-    static let pomodoroButton = NSTouchBarItem.Identifier(
-        "com.aloshev.focustimer.pomodoroButton"
-    )
 }
